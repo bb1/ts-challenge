@@ -21,3 +21,5 @@ You are allowed to install anything that helps you build this including Frontend
 * All E2E tests pass
 * think about a user-friendly way to create a page
 * only accept valid addresses
+
+**Optional Hardcore-Mode:** Don't use any framework.
