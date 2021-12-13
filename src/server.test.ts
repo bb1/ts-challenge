@@ -1,18 +1,30 @@
-import { autoCompleteAddress, Address } from './server';
+import { autoCompleteAddress, Address, InvalidParameters } from './server';
 
 const QUERY_404 = 'you_not_gonna_find_anything_with_this';
 
-test('basic type structure', () => {
+test('basic structure', () => {
     expect(typeof autoCompleteAddress).toEqual('function');
     const queryJune = autoCompleteAddress(QUERY_404);
     expect(queryJune).toBeInstanceOf(Object);
     expect(Number.isInteger(queryJune.count)).toBe(true);
-    expect(queryJune.count).toBe(0);
     expect(queryJune.addresses).toBeInstanceOf(Array);
     expect(typeof queryJune.time).toBe('number');
 });
 
-test('find strasse', () => {
+test('empty response', () => {
+    const queryJune = autoCompleteAddress(QUERY_404);
+    expect(queryJune.count).toBe(0);
+    expect(queryJune.addresses.length).toBe(0);
+});
+
+test('invalid params', () => {
+    // @ts-ignore
+    expect(() => autoCompleteAddress({})).toThrow(InvalidParameters);
+    // @ts-ignore
+    expect(() => autoCompleteAddress([])).toThrow(InvalidParameters);
+});
+
+test('find "Straße des 17. Juni"', () => {
     const queryJune = autoCompleteAddress('strasse');
     const addresses = queryJune.addresses;
     expect(addresses).toBeInstanceOf(Array);
@@ -26,7 +38,7 @@ test('find strasse', () => {
     })
 });
 
-test('find Kasseler Str', () => {
+test('find "Kasseler Str"', () => {
     const { addresses, count } = autoCompleteAddress('kasseler');
     expect(addresses.length).toEqual(1);
     expect(count).toEqual(1);

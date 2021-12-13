@@ -28,3 +28,6 @@ export function autoCompleteAddress(query: string): AutoCompleteResponse {
         time: 0,
     }
 }
+
+export class InvalidParameters extends Error {
+}
