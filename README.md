@@ -21,7 +21,7 @@ You are allowed to install anything that helps you build this including Frontend
 
 **Rules:**
 * All E2E tests pass
-* think about a user-friendly way to create a page
+* think about a user-friendly way to create a page which let's anyone submit an address in cologne
 * only accept valid addresses
 
-**Optional Hardcore-Mode:** Don't use any framework.
+**Optional Hardcore-Mode:** Don't use any framework or dependecies.
