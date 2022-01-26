@@ -3,6 +3,8 @@ import { Address } from './interfaces';
 
 const QUERY_404 = 'you_not_gonna_find_anything_with_this';
 
+jest.setTimeout(15000);
+
 test('basic structure', () => {
     expect(typeof autoCompleteAddress).toEqual('function');
     const queryResult = autoCompleteAddress(QUERY_404);
@@ -53,16 +55,17 @@ test('find "Ehrenbergstr."', () => {
 
 test('find "Kasseler Str"', () => {
     const { addresses, count } = autoCompleteAddress('kasseler');
-    expect(addresses.length).toEqual(1);
+    expect(addresses.length).toEqual(2);
     expect(count).toEqual(2);
-    expect(addresses).toContainEqual<Address>({
+    // the order doesn't really matter
+    expect(addresses[0]).toMatchObject<Address>({
         district: 'Chorweiler',
         zip: '50769',
         city: 'Köln',
-        street: 'Kasseler Str.',
+        street: 'Kasseler Weg',
         numbers: ['52', '73', '75', '77', '78', '79', '81', '83', '85', '85a', '86', '88', '89', '90', '91', '92', '93', '94', '95', '96', '99', '100', '101', '102', '103', '104', '105', '106', '107', '108', '109']
     })
-    expect(addresses).toContainEqual<Address>({
+    expect(addresses[1]).toMatchObject<Address>({
         district: 'Mülheim',
         zip: '51065',
         city: 'Köln',
