@@ -3,30 +3,30 @@ import { Address } from './interfaces';
 
 const QUERY_404 = 'you_not_gonna_find_anything_with_this';
 
-test('basic structure', () => {
+test('basic structure', async () => {
     expect(typeof autoCompleteAddress).toEqual('function');
-    const queryResult = autoCompleteAddress(QUERY_404);
+    const queryResult = await autoCompleteAddress(QUERY_404);
     expect(queryResult).toBeInstanceOf(Object);
     expect(Number.isInteger(queryResult.count)).toBe(true);
     expect(queryResult.addresses).toBeInstanceOf(Array);
     expect(typeof queryResult.time).toBe('number');
 });
 
-test('empty response', () => {
-    const queryResult = autoCompleteAddress(QUERY_404);
+test('empty response', async () => {
+    const queryResult = await autoCompleteAddress(QUERY_404);
     expect(queryResult.count).toBe(0);
     expect(queryResult.addresses.length).toBe(0);
 });
 
-test('invalid params', () => {
+test('invalid params', async () => {
     // @ts-ignore
-    expect(() => autoCompleteAddress({})).toThrow(InvalidParameters);
+    await expect(() => autoCompleteAddress({})).rejects.toThrow(InvalidParameters);
     // @ts-ignore
-    expect(() => autoCompleteAddress([])).toThrow(InvalidParameters);
+    await expect(() => autoCompleteAddress([])).rejects.toThrow(InvalidParameters);
 });
 
-test('find "Straße des 17. Juni"', () => {
-    const queryResult = autoCompleteAddress('strasse');
+test('find "Straße des 17. Juni"', async () => {
+    const queryResult = await autoCompleteAddress('strasse');
     const addresses = queryResult.addresses;
     expect(addresses).toBeInstanceOf(Array);
     expect(addresses.length).toEqual(1);
@@ -39,8 +39,8 @@ test('find "Straße des 17. Juni"', () => {
     })
 });
 
-test('find "Ehrenbergstr."', () => {
-    const { addresses } = autoCompleteAddress('ehrenbe');
+test('find "Ehrenbergstr."', async () => {
+    const { addresses } = await autoCompleteAddress('ehrenbe');
     expect(addresses.length).toEqual(1);
     expect(addresses[0]).toMatchObject<Address>({
         district: 'Nippes',
@@ -51,9 +51,9 @@ test('find "Ehrenbergstr."', () => {
     })
 });
 
-test('find "Kasseler Str"', () => {
-    const { addresses, count } = autoCompleteAddress('kasseler');
-    expect(addresses.length).toEqual(1);
+test('find "Kasseler Str"', async () => {
+    const { addresses, count } = await autoCompleteAddress('kasseler');
+    expect(addresses.length).toEqual(2);
     expect(count).toEqual(2);
     expect(addresses).toContainEqual<Address>({
         district: 'Chorweiler',
@@ -71,8 +71,8 @@ test('find "Kasseler Str"', () => {
     })
 });
 
-test('find "Hauptstr"', () => {
-    const { addresses, count } = autoCompleteAddress('haupt');
+test('find "Hauptstr"', async () => {
+    const { addresses, count } = await autoCompleteAddress('haupt');
     expect(addresses.length).toEqual(3);
     expect(count).toEqual(3);
     expect(addresses).toContainEqual({
