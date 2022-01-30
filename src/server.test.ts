@@ -1,5 +1,5 @@
-import { autoCompleteAddress, InvalidParameters } from './server';
-import { Address } from './interfaces';
+import { autoCompleteAddress, autoCompleteAddressWithoutNo, InvalidParameters } from './server';
+import { Address, AddressWithoutNo } from './interfaces';
 
 const QUERY_404 = 'you_not_gonna_find_anything_with_this';
 
@@ -84,5 +84,31 @@ test('find "Hauptstr"', async () => {
         city: 'Köln',
         street: 'Hauptstr.',
         numbers: ['10', '12', '12a', '12b', '12c', '12d', '12e', '14', '100', '115', '117', '119', '121']
+    })
+});
+
+
+test('find "Straße des 17. Juni" without Numbers', async () => {
+    const queryResult = await autoCompleteAddressWithoutNo('strasse');
+    const addresses = queryResult.addresses;
+    expect(addresses).toBeInstanceOf(Array);
+    expect(addresses.length).toEqual(1);
+    expect(addresses[0]).toMatchObject<AddressWithoutNo>({
+        district: 'Kalk',
+        zip: '51103',
+        city: 'Köln',
+        street: 'Straße des 17. Juni',
+    })
+});
+
+test('find "Hauptstr" without Numbers', async () => {
+    const { addresses, count } = await autoCompleteAddressWithoutNo('haupt');
+    expect(addresses.length).toEqual(3);
+    expect(count).toEqual(3);
+    expect(addresses).toContainEqual({
+        district: 'Lindenthal',
+        zip: '50859',
+        city: 'Köln',
+        street: 'Hauptstr.',
     })
 });

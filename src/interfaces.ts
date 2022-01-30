@@ -11,3 +11,17 @@ export interface Address {
     district: string;
     city: string;
 }
+
+export interface AutoCompleteResponseWithoutNo {
+    count: number;
+    addresses: AddressWithoutNo[];
+    time: number;
+}
+
+export interface AddressWithoutNo {
+    street: string;
+    zip: string;
+    district: string;
+    city: string;
+}
+
