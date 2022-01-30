@@ -1,41 +1,69 @@
 import axios from 'axios';
 import { AutoCompleteResponse } from './interfaces';
+import { Address } from './interfaces';
 
 const BASE_URL = 'https://geoportal.stadt-koeln.de/Finder/Lookup?filter=type:adr&query=';
 
 export async function autoCompleteAddress(query: string): Promise<AutoCompleteResponse> {
 
-    const res = await axios.get(BASE_URL + query);
+    if (typeof query != 'string') throw new InvalidParameters("query must be a string");
 
-    //console.log(res.data);
+    const timerStart = Date.now();
+    const url = BASE_URL + query
+    const res = await axios.get(url);
 
-    // stb  = district
-    // plz  = zip
-    // name = str
+    // stb = district
+    // plz = zip
+    // str = street
 
-    let resCount = res.data.count;
-    let numbers = [];
-    let i;
-    for(i=0; i<resCount; i++) {
-        numbers.push( res.data.locs[i].fields.hnr);
-    }     
+    // return empty AutoCompleteResponse if no res.data is empty
+    if (!res.data.count) {
+        const delta = Date.now() - timerStart;
+        const ret: AutoCompleteResponse = {
+            count: 0,
+            addresses: [],
+            time: delta
+        }
+        return ret;
+    };
 
-    numbers.sort((a, b)=>{return a-b});
+    let numbers:   string[]  = [];
+    let addresses: Address[] = [];
 
-    //console.log(numbers);
+    let streetIds = Array.from(new Set(res.data.locs.map((item: any)=>item.fields.strid)));
+    streetIds.reverse(); // apparently - order does matter ...
 
-    return {
-        count: 1,
-        addresses: [{
-            district:   res.data.locs[0].fields.stb,
-            zip:        res.data.locs[0].fields.plz,
+    streetIds.forEach((streetId) => {
+        const streetData = res.data.locs.filter((address: any)=> address.fields.strid == streetId);
+        let numbers: string[] = streetData.map((address: any) => address.fields.hnr);
+        numbers.sort((a, b) => {
+            return a.localeCompare(b, undefined, {
+                numeric:     true,
+                sensitivity: 'base'
+        })});
+
+        addresses.push({
+            district:   streetData[0].fields.stb,
+            zip:        streetData[0].fields.plz,
             city:       'Köln',
-            street:     res.data.locs[0].fields.str,
+            street:     streetData[0].fields.str,
             numbers:    numbers
-        }],
-        time: 0,
+        });
+    });
+
+    const delta = Date.now() - timerStart;
+
+    const ret: AutoCompleteResponse = {
+        count: addresses.length,
+        addresses: addresses,
+        time: delta,
     }
+    return ret;
 }
 
 export class InvalidParameters extends Error {
+    constructor(m: string) {
+        super(m);
+        Object.setPrototypeOf(this, InvalidParameters.prototype);
+    }
 }

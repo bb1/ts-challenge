@@ -22,9 +22,9 @@ test('empty response', async () => {
 
 test('invalid params', async () => {
     // @ts-ignore
-    expect(() => autoCompleteAddress({})).toThrow(InvalidParameters);
+    expect(() => autoCompleteAddress({})).rejects.toThrow(InvalidParameters);
     // @ts-ignore
-    expect(() => autoCompleteAddress([])).toThrow(InvalidParameters);
+    expect(() => autoCompleteAddress([])).rejects.toThrow(InvalidParameters);
 });
 
 test('find "Straße des 17. Juni"',async () => {
