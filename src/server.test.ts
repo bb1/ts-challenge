@@ -46,7 +46,7 @@ test('find Ehrenbergstr.', async () => {
     })
 });
 
-test('find Kasseler Str', async () => {
+test('find Kasseler', async () => {
     const { addresses, count } = await autoCompleteAddress('kasseler');
     expect(addresses.length).toEqual(2);
     expect(count).toEqual(2);
@@ -77,7 +77,7 @@ test('invalid params', async () => {
     await expect(autoCompleteAddress()).rejects.toBeInstanceOf(InvalidParameters);
 });
 
-test('find "Hauptstr"', async () => {
+test('find Haupt', async () => {
     const { addresses, count } = await autoCompleteAddress('haupt');
     expect(addresses.length).toEqual(3);
     expect(count).toEqual(3);
