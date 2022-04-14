@@ -26,7 +26,8 @@
   "scripts": {
     "test": "jest",
     "test-watch": "jest --watchAll",
-    "test-debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
+    "test-debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "test-one": "jest --testNamePattern 'invalid params' "
   },
   "repository": {
     "type": "git",
