@@ -3,7 +3,9 @@ import { AutoCompleteResponse } from './interfaces';
 
 const BASE_URL = 'https://geoportal.stadt-koeln.de/Finder/Lookup?filter=type:adr&query=';
 
-export function autoCompleteAddress(query: string): AutoCompleteResponse {
+export async function autoCompleteAddress(query: string): Promise<AutoCompleteResponse> {
+    // TODO: implement!
+
     return {
         count: 1,
         addresses: [{
